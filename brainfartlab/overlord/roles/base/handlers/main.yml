@@ -1,0 +1,5 @@
+---
+- name: gpg-agent | reload
+  become: yes
+  become_user: "{{ username }}"
+  ansible.builtin.shell: gpg-connect-agent reloadagent /bye

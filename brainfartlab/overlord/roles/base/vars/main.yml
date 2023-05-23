@@ -1,0 +1,16 @@
+---
+install_packages:
+  - bzip2
+  - bzip2-devel
+  - git
+  - gnupg2
+  - man
+  - openssl
+  - openssl-devel
+  - pass
+  - pinentry-tty
+  - xclip
+  - xz
+  - xz-devel
+  - zlib-devel
+  - zsh

@@ -1,0 +1,12 @@
+# see https://community.clearlinux.org/t/solved-how-to-remap-keyboard-key/2950
+
+# fit to most AT built-in keyboard
+evdev:atkbd:dmi:*
+  KEYBOARD_KEY_3a=leftctrl
+
+# fit to any usb keyboard
+keyboard:usb:v*p*
+  KEYBOARD_KEY_3a=leftctrl
+
+evdev:input:b0003v0416pC145*
+  KEYBOARD_KEY_70039=leftctrl

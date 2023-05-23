@@ -1,0 +1,14 @@
+---
+- name: check if .password-store exists
+  ansible.builtin.stat:
+    path: "~{{ username }}/.password-store"
+  register: password_store_presence
+
+- name: clone private password store
+  ansible.builtin.git:
+    repo: "{{ repo }}"
+    version: master
+    dest: "~{{ username }}/.password-store"
+    accept_hostkey: yes
+    key_file: "~{{ username }}/.ssh/id_ssh_rsa"
+  when: not password_store_presence.stat.exists
