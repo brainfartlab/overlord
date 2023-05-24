@@ -1,0 +1,52 @@
+---
+- name: install packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ install_packages }}"
+
+- name: copy configuration files
+  become: yes
+  become_user: "{{ username }}"
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "~{{ username }}/{{ item }}"
+    backup: yes
+    mode: '0640'
+  loop: "{{ configuration_files }}"
+
+- name: clean vim bundle directory
+  become: yes
+  become_user: "{{ username }}"
+  ansible.builtin.file:
+    path: "~{{ username }}/.vim/bundle"
+    state: absent
+
+- name: clone minpac
+  become: yes
+  become_user: "{{ username }}"
+  ansible.builtin.git:
+    repo: "https://github.com/k-takata/minpac.git"
+    version: master
+    dest: "~{{ username }}/.vim/pack/minpac/opt/minpac"
+
+- name: vim nord color scheme
+  become: yes
+  become_user: "{{ username }}"
+  block:
+    - name: clone nord color scheme
+      ansible.builtin.git:
+        repo: "https://github.com/nordtheme/gnome-terminal"
+        version: master
+        dest: /tmp/nord-gnome-terminal
+
+    - name: install nord color scheme
+      ansible.builtin.shell: /tmp/nord-gnome-terminal/src/sh/nord.sh
+
+- name: vim minpac update
+  become: yes
+  become_user: "{{ username }}"
+  ansible.builtin.shell: |
+    vim "+call PackInit()" "+call minpac#update('', {'do': 'qall'})"
+  args:
+    executable: /bin/bash

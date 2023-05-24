@@ -1,0 +1,13 @@
+---
+- name: Converge
+  hosts: all
+
+  pre_tasks:
+    - name: Create user
+      become: true
+      ansible.builtin.user:
+        name: "{{ username }}"
+        createhome: true
+
+  roles:
+    - role: utilities

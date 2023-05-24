@@ -1,7 +1,7 @@
 Role Name
 =========
 
-Contains the base configuration including essential packages and the bare minimum setup.
+Setup terminal tools such as Vim and TMUX. Configuration files from the role are copied over.
 
 Requirements
 ------------
@@ -17,28 +17,16 @@ The following variables will change the behavior of this role (default values ar
 ```yaml
 # defaults
 username: user1
-authorizations:
-    pass: yes
-    github: yes
-    gpg: yes
-
-repo: <repo for password store>
-
-gpg_email: john.doe@example.com
-gpg_public_key: |
-  -----BEGIN PGP PUBLIC KEY BLOCK-----
-  -----END PGP PUBLIC KEY BLOCK-----
-gpg_signing_key: |
-  -----BEGIN PGP PRIVATE KEY BLOCK-----
-  -----END PGP PRIVATE KEY BLOCK-----
-gpg_ownertrust: |
-  1234:6:
-gpg_passphrase: secret
 
 # vars
 install_packages:
     - git
-    - zsh
+    - vim
+    - tmux
+
+configuration_files:
+    - .vimrc
+    - .tmux.conf
 ```
 
 Example Playbook
@@ -50,7 +38,6 @@ Including an example of how to use your role (for instance, with variables passe
       roles:
         - role: brainfartlab.base
           username: user1
-          authorizations
 
 License
 -------
@@ -60,4 +47,4 @@ BSD
 Author Information
 ------------------
 
-Antoine Vandermeersch
+An optional section for the role authors to include contact information, or a website (HTML is not allowed).

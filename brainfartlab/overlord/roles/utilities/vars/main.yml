@@ -1,0 +1,10 @@
+---
+install_packages:
+  - git
+  - fzf
+  - vim
+  - tmux
+
+configuration_files:
+  - .vimrc
+  - .tmux.conf

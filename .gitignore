@@ -1,1 +1,4 @@
 .main.example.yml
+
+# Vim files
+*.swp
