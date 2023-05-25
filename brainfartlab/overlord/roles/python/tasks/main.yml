@@ -1,0 +1,6 @@
+---
+- name: setup pyenv
+  ansible.builtin.import_tasks: pyenv.yml
+  
+- name: setup poetry
+  ansible.builtin.import_tasks: poetry.yml

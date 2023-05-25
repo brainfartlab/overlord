@@ -1,0 +1,14 @@
+---
+- name: install pyenv
+  ansible.builtin.shell: "curl https://pyenv.run | bash -"
+  args:
+    creates: "~/.pyenv"
+
+- name: configure shell for pyenv
+  ansible.builtin.blockinfile:
+    path: "~/.zshrc"
+    insertafter: EOF
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - pyenv'
+    block: "{{ pyenv_commands | string }}"
+    create: yes
+

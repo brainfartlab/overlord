@@ -1,0 +1,34 @@
+---
+- name: Converge
+  hosts: all
+
+  vars:
+    user: user1
+
+  pre_tasks:
+    - name: install packages
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - git
+        - zsh
+
+    - name: create user
+      ansible.builtin.user:
+        name: "{{ user }}"
+        createhome: true
+        shell: /bin/zsh
+
+    - name: create user temp directory
+      ansible.builtin.file:
+        path: "/home/{{ user }}/.ansible/tmp"
+        state: directory
+        mode: '0700'
+        owner: "{{ user }}"
+        group: "{{ user }}"
+
+  roles:
+    - role: python
+      become: yes
+      become_user: "{{ user }}"
