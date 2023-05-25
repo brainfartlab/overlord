@@ -1,0 +1,5 @@
+---
+- name: install volta
+  ansible.builtin.shell: "curl https://get.volta.sh | bash"
+  args:
+    creates: "~/.volta"
