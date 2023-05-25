@@ -3,9 +3,22 @@ install_packages:
   - git
   - fzf
   - jq
+  - ripgrep
   - vim
   - tmux
 
-configuration_files:
-  - .vimrc
-  - .tmux.conf
+tmux_aliases: |
+  # Attaches tmux to the last session; creates a new session if none exists
+  alias t='tmux attach || tmux new-session'
+
+  # Attaches tmux to a session (example: ta portal)
+  alias ta='tmux attach -t'
+
+  # Creates a new session (example: tn -s portal)
+  alias tn='tmux new-session'
+
+  # Lists all ongoing sessions
+  alias tl='tmux list-sessions'
+
+fzf_default: |
+  export FZF_DEFAULT_COMMAND='rg --files --hidden'

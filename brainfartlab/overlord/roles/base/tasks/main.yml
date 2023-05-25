@@ -9,3 +9,10 @@
   ansible.builtin.copy:
     src: files/udev/
     dest: /etc/udev/
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: update hardware database index
+  ansible.builtin.command: system-hwdb update
+  change_when: false

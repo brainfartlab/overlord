@@ -1,0 +1,15 @@
+---
+- name: copy configuration files
+  ansible.builtin.copy:
+    src: .tmux.conf
+    dest: ~/.tmux.conf
+    backup: yes
+    mode: '0640'
+
+- name: aliases for tmux
+  ansible.builtin.blockinfile:
+    path: ~/.zshrc
+    insertafter: EOF
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - tmux'
+    block: "{{ tmux_aliases | string }}"
+    create: yes

@@ -1,25 +1,5 @@
 ---
-- name: check if .oh-my-zsh exists
-  ansible.builtin.stat:
-    path: "~/.oh-my-zsh"
-  register: ohmyzsh_presence
-
 - name: oh my zsh
-  block:
-    - name: download oh my zsh installer
-      ansible.builtin.get_url:
-        url: "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
-        dest: ~/install.sh
-        mode: '0555'
-
-    - name: install oh my zsh
-      ansible.builtin.shell: ~/install.sh
-      args:
-        creates: "~/.oh-my-zsh"
-
-    - name: remove oh my zsh installer
-      ansible.builtin.file:
-        path: ~/install.sh
-        state: absent
-
-  when: not ohmyzsh_presence.stat.exists
+  ansible.builtin.shell: "curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash"
+  args:
+    creates: "~/.oh-my-zsh"

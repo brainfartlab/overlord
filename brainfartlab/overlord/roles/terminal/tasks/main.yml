@@ -10,51 +10,8 @@
 - name: install oh my zsh
   ansible.builtin.import_tasks: oh-my-zsh.yml
 
-- name: copy configuration files
-  ansible.builtin.copy:
-    src: "{{ item }}"
-    dest: "~/{{ item }}"
-    backup: yes
-    mode: '0640'
-  loop: "{{ configuration_files }}"
+- name: install and configure vim
+  ansible.builtin.import_tasks: vim.yml
 
-- name: clean vim bundle directory
-  ansible.builtin.file:
-    path: "~/.vim/bundle"
-    state: absent
-
-- name: clone minpac
-  ansible.builtin.git:
-    repo: "https://github.com/k-takata/minpac.git"
-    version: master
-    dest: "~/.vim/pack/minpac/opt/minpac"
-
-- name: check nord theme presence
-  ansible.builtin.stat:
-    path: "~/.vim/pack/minpac/start/vim/colors/nord.vim"
-  register: nord_theme_presence
-
-- name: vim nord color scheme
-  block:
-    - name: clone nord color scheme
-      ansible.builtin.git:
-        repo: "https://github.com/nordtheme/gnome-terminal"
-        version: master
-        dest: ~/nord-gnome-terminal
-
-    - name: install nord color theme
-      ansible.builtin.shell: ~/nord-gnome-terminal/src/sh/nord.sh
-
-    - name: remove nord color theme installer
-      ansible.builtin.file:
-        path: ~/nord-gnome-terminal
-        state: absent
-
-  when: not nord_theme_presence.stat.exists
-
-- name: vim minpac update
-  ansible.builtin.shell: |
-    vim "+call PackInit()" "+call minpac#update('', {'do': 'qall'})"
-  args:
-    executable: /bin/bash
-  changed_when: false
+- name: install and configure tmux
+  ansible.builtin.import_tasks: tmux.yml
