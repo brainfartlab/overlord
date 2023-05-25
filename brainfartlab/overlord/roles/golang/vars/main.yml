@@ -1,0 +1,6 @@
+---
+golang_packages:
+  - golang
+
+golang_commands: |
+  export GOPATH=$HOME/go

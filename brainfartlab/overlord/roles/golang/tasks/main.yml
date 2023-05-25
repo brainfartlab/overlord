@@ -1,0 +1,23 @@
+---
+- name: install golang packages
+  become: yes
+  become_user: root
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ golang_packages }}"
+
+- name: create go directory
+  ansible.builtin.file:
+    path: "~/go"
+    state: directory
+    mode: '0700'
+
+- name: configure shell for golang
+  ansible.builtin.blockinfile:
+    path: "~/.zshrc"
+    insertafter: EOF
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - golang'
+    block: "{{ golang_commands | string }}"
+    create: yes
+
