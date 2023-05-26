@@ -19,16 +19,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup python
-        uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          python-version: "3.10"
+          python-version: '3.x'
 
-      - name: Setup molecule
-        run: pip install molecule
+      - name: Install dependencies.
+        run: pip3 install yamllint ansible-lint ansible "molecule[lint,docker]"
+
+      - name: Install Galaxy dependencies.
+        run: ansible-galaxy collection install community.podman
 
       - name: Run molecule
-        uses: gofrolist/molecule-action@v2
-        with:
-          molecule_command: test
-          molecule_working_dir: "brainfartlab/overlord/roles/base"
+        working-directory: brainfartlab/overlord/roles/base
+        run: molecule test
