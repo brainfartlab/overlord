@@ -1,4 +1,4 @@
-name: "Molecule test"
+name: "Ansible Galaxy collection CI/CD"
 
 on:
   release:
