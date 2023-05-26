@@ -13,6 +13,8 @@ concurrency:
 jobs:
   molecule:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -27,4 +29,6 @@ jobs:
 
       - name: Run molecule
         working-directory: brainfartlab/overlord/roles/base
-        run: molecule test
+        uses: gofrolist/molecule-action@v2
+        with:
+          molecule_command: test
