@@ -16,6 +16,9 @@ jobs:
     outputs:
       matrix: ${{ steps.matrix.outputs.roles }}
     steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
       - id: matrix
         run: |
           roles=$(ls | jq -R -s -c 'split("\n")[:-1]')
@@ -38,7 +41,7 @@ jobs:
           #     timeout-minutes: 20
           # 
           #     steps:
-          #       - name: Checkout
+          #       - name: checkout
           #         uses: actions/checkout@v3
           # 
           #       - name: Set up Python
