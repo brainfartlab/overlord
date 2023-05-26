@@ -31,4 +31,4 @@ jobs:
         uses: gofrolist/molecule-action@v2
         with:
           molecule_command: test
-          molecule_working_dir: "overlord/brainfartlab/overlord/roles/base"
+          molecule_working_dir: "brainfartlab/overlord/brainfartlab/overlord/roles/base"
