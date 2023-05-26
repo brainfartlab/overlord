@@ -21,6 +21,7 @@ jobs:
           roles=$(ls | jq -R -s -c 'split("\n")[:-1]')
           echo "$roles"
           echo "roles=$roles" >> "$GITHUB_OUTPUT"
+        working-directory: brainfartlab/overlord/roles
 
   consume-roles:
     needs: gather
