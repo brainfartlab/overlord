@@ -24,3 +24,7 @@ jobs:
 
       - name: Setup molecule
         run: pip install molecule
+
+      - name: Run molecule
+        working-directory: brainfartlab/overlord/roles/base
+        run: molecule test
