@@ -22,7 +22,7 @@ jobs:
           echo "action_state=$roles" >> "$GITHUB_OUTPUT"
 
   consume-roles:
-    needs: [gather-roles]
+    needs: [ gather ]
     runs-on: ubuntu-latest
     strategy:
       matrix:
