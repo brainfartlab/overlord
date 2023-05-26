@@ -9,6 +9,7 @@ install_packages:
   - openssl-devel
   - pass
   - pinentry-tty
+  - systemd-udev
   - xclip
   - xz
   - xz-devel
