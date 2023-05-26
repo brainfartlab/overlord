@@ -28,7 +28,7 @@ jobs:
         run: pip3 install yamllint ansible-lint ansible "molecule[lint,docker]"
 
       - name: Install Galaxy dependencies.
-        run: ansible-galaxy collection install containers.podman
+        run: run: sudo apt-get install -y podman
 
       - name: Run molecule
         working-directory: brainfartlab/overlord/roles/base
