@@ -52,6 +52,7 @@ jobs:
         run: molecule test
 
   deploy:
+    needs: molecule
     runs-on: ubuntu-latest
     steps:
       - name: checkout
