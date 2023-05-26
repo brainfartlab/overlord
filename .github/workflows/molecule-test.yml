@@ -14,19 +14,19 @@ jobs:
   gather:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.matrix.outputs.value }}
+      matrix: ${{ steps.matrix.outputs.roles }}
     steps:
       - id: matrix
         run: |
           roles=$(ls | jq -R -s -c 'split("\n")[:-1]')
-          echo "action_state=$roles" >> "$GITHUB_OUTPUT"
+          echo "roles=$roles" >> "$GITHUB_OUTPUT"
 
   consume-roles:
-    needs: [ gather ]
+    needs: gather
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        value: ${{fromJson(gather.setup.outputs.matrix)}}
+        value: ${{fromJson(needs.gather.outputs.matrix)}}
     steps:
       - run: |
           echo "${{ matrix.value }}"
