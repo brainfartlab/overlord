@@ -69,6 +69,9 @@ Including an example of how to use your role (for instance, with variables passe
                 pass: true
                 github: true
                 gpg: true
+            private_ssh_key:
+              -----BEGIN OPENSSH PRIVATE KEY-----
+              -----END OPENSSH PRIVATE KEY-----
             repo: git@github.com:myorg/password-store.git
             gpg_email: "john.doe@example.com"
             gpg_public_key: |
@@ -82,6 +85,8 @@ Including an example of how to use your role (for instance, with variables passe
             gpg_ownertrust: |
               1234:6:
             gpg_passphrase: secret
+
+If no private ssh key is supplied (it is assumed the public key has been planted at the location of the repository, for example as a deploy key in Github), a keypair will be created in Ansible and the flow will be paused. The printed public key will then have to be planted by the user.
 
 License
 -------
