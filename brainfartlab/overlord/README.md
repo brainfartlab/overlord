@@ -1,3 +1,15 @@
 # Ansible Collection - brainfartlab.overlord
 
-Documentation for the collection.
+Collection for BC/DR purposes of our personal BYOD setup. The following platforms are supported:
+- Fedora 38
+
+Functionality includes:
+- base packages
+- password store setup
+- terminal setup (vim plugins, tmux)
+- setup for programming languages:
+    - python
+    - golang
+    - rust
+    - node
+- flatpaks

@@ -1,22 +1,60 @@
-Role Name
+credentials
 =========
 
-A brief description of the role goes here.
+Setup up our credentials store on this device, this entails cloning our private encrypted password store and migrating our GPG key for access.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Ansible Core > 2.15.0
+Linux
+- Fedora: 38
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+The following variables will change the behavior of this role (default values are shown below):
+```yaml
+# defaults
+authorizations:
+    pass: true
+    github: true
+    gpg: true
+repo: git@github.com:myorg/password-store.git
+gpg_email: "john.doe@example.com"
+gpg_public_key: |
+  -----BEGIN PGP PUBLIC KEY BLOCK-----
+  -----END PGP PUBLIC KEY BLOCK-----
 
-Dependencies
-------------
+gpg_signing_key: |
+  -----BEGIN PGP PRIVATE KEY BLOCK-----
+  -----END PGP PRIVATE KEY BLOCK-----
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+gpg_ownertrust: |
+  1234:6:
+gpg_passphrase: secret
+
+# vars
+install_packages:
+  - gnupg2
+  - pinentry-tty
+
+gpg_conf_loopback: |
+  # For unattended passphrase
+  pinentry-mode loopback
+
+gpg_agent_conf_loopback: |
+  # For unattended passphrase
+  allow-loopback-pinentry
+  allow-preset-passphrase
+```
+
+The authorizations are explained as follows:
+- pass: if true will copy over our password store (needs: github)
+- github: generate an SSH keypair and pauses for the user to upload the public key to Github
+- gpg: installs a supplied GPG key
+
+For installing the GPG key we require the `pinentry-tty` package and enabled loopback in gnupg2 for passing the passphrase. This loopbakc enabling will be removed at the end.
 
 Example Playbook
 ----------------
@@ -25,7 +63,25 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+        - role: brainfartlab.overlord.credentials
+          vars:
+            authorizations:
+                pass: true
+                github: true
+                gpg: true
+            repo: git@github.com:myorg/password-store.git
+            gpg_email: "john.doe@example.com"
+            gpg_public_key: |
+              -----BEGIN PGP PUBLIC KEY BLOCK-----
+              -----END PGP PUBLIC KEY BLOCK-----
+
+            gpg_signing_key: |
+              -----BEGIN PGP PRIVATE KEY BLOCK-----
+              -----END PGP PRIVATE KEY BLOCK-----
+
+            gpg_ownertrust: |
+              1234:6:
+            gpg_passphrase: secret
 
 License
 -------
@@ -35,4 +91,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Antoine Vandermeersch, BrainFartLab

@@ -1,4 +1,4 @@
-Role Name
+base
 =========
 
 Contains the base configuration including essential packages and the bare minimum setup.
@@ -16,41 +16,33 @@ Role Variables
 The following variables will change the behavior of this role (default values are shown below):
 ```yaml
 # defaults
-username: user1
-authorizations:
-    pass: yes
-    github: yes
-    gpg: yes
-
-repo: <repo for password store>
-
-gpg_email: john.doe@example.com
-gpg_public_key: |
-  -----BEGIN PGP PUBLIC KEY BLOCK-----
-  -----END PGP PUBLIC KEY BLOCK-----
-gpg_signing_key: |
-  -----BEGIN PGP PRIVATE KEY BLOCK-----
-  -----END PGP PRIVATE KEY BLOCK-----
-gpg_ownertrust: |
-  1234:6:
-gpg_passphrase: secret
 
 # vars
 install_packages:
-    - git
-    - zsh
+  - bzip2
+  - bzip2-devel
+  - git
+  - gnupg2
+  - man
+  - openssl
+  - openssl-devel
+  - pass
+  - pinentry-tty
+  - xclip
+  - xz
+  - xz-devel
+  - zlib-devel
+  - zsh
 ```
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Example usage:
 
     - hosts: servers
       roles:
-        - role: brainfartlab.base
-          username: user1
-          authorizations
+        - role: brainfartlab.overlord.base
 
 License
 -------
@@ -60,4 +52,4 @@ BSD
 Author Information
 ------------------
 
-Antoine Vandermeersch
+Antoine Vandermeersch, BrainFartLab
