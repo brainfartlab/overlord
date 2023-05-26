@@ -28,7 +28,7 @@ jobs:
         run: pip install molecule
 
       - name: Run molecule
-        working-directory: brainfartlab/overlord/roles/base
+        working-directory: "brainfartlab/overlord/roles/base"
         uses: gofrolist/molecule-action@v2
         with:
           molecule_command: test
