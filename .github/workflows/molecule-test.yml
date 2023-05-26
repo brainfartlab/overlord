@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  gather-roles:
+  gather:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.matrix.outputs.value }}
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        value: ${{fromJson(gather-roles.setup.outputs.matrix)}}
+        value: ${{fromJson(gather.setup.outputs.matrix)}}
     steps:
       - run: |
           echo "${{ matrix.value }}"
