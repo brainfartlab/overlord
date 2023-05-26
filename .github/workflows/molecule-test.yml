@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  gather:
+  roles:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.matrix.outputs.roles }}
@@ -22,39 +22,32 @@ jobs:
       - id: matrix
         run: |
           roles=$(ls | jq -R -s -c 'split("\n")[:-1]')
-          echo "$roles"
           echo "roles=$roles" >> "$GITHUB_OUTPUT"
         working-directory: brainfartlab/overlord/roles
 
-  consume-roles:
-    needs: gather
+  molecule:
+    needs: roles
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       matrix:
-        value: ${{fromJson(needs.gather.outputs.matrix)}}
-    steps:
-      - run: |
-          echo "${{ matrix.value }}"
+        value: ${{fromJson(needs.roles.outputs.matrix)}}
 
-          #   molecule:
-          #     runs-on: ubuntu-latest
-          #     timeout-minutes: 20
-          # 
-          #     steps:
-          #       - name: checkout
-          #         uses: actions/checkout@v3
-          # 
-          #       - name: Set up Python
-          #         uses: actions/setup-python@v2
-          #         with:
-          #           python-version: '3.x'
-          # 
-          #       - name: Install dependencies.
-          #         run: pip3 install yamllint ansible-lint ansible "molecule[lint,podman]" molecule-podman
-          # 
-          #       - name: Install Galaxy dependencies.
-          #         run: ansible-galaxy collection install containers.podman
-          # 
-          #       - name: Run molecule
-          #         working-directory: brainfartlab/overlord/roles/base
-          #         run: molecule test
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies.
+        run: pip3 install yamllint ansible-lint ansible "molecule[lint,podman]" molecule-podman
+
+      - name: Install Galaxy dependencies.
+        run: ansible-galaxy collection install containers.podman
+
+      - name: Run molecule
+        working-directory: brainfartlab/overlord/roles/${{ matrix.value }}
+        run: molecule test
