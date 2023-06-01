@@ -1,0 +1,52 @@
+name: "Molecule"
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.head_ref }}'
+  cancel-in-progress: true
+
+jobs:
+  roles:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.roles }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - id: matrix
+        run: |
+          roles=$(ls | jq -R -s -c 'split("\n")[:-1]')
+          echo "roles=$roles" >> "$GITHUB_OUTPUT"
+        working-directory: brainfartlab/overlord/roles
+
+  molecule:
+    needs: roles
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        value: ${{fromJson(needs.roles.outputs.matrix)}}
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies.
+        run: pip3 install yamllint ansible-lint ansible "molecule[lint,podman]" molecule-plugins
+
+      - name: Install Galaxy dependencies.
+        run: ansible-galaxy collection install containers.podman
+
+      - name: Run molecule
+        working-directory: brainfartlab/overlord/roles/${{ matrix.value }}
+        run: molecule test
