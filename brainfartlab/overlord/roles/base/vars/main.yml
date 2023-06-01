@@ -5,6 +5,7 @@ install_packages:
   - git
   - gnupg2
   - man
+  - openssh
   - openssl
   - openssl-devel
   - pass
