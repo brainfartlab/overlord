@@ -42,7 +42,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install dependencies.
-        run: pip3 install yamllint ansible-lint ansible "molecule[lint,podman]" molecule-plugins
+        run: pip3 install yamllint ansible-lint ansible "molecule[lint]" "molecule-plugins[podman]"
 
       - name: Install Galaxy dependencies.
         run: ansible-galaxy collection install containers.podman
