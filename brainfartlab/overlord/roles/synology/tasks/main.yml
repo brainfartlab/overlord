@@ -41,9 +41,12 @@
   block:
     - name: ensure scripts directory exists
       ansible.builtin.file:
-        path: "~/scripts"
+        path: "{{ item }}"
         state: directory
         mode: '0755'
+      loop:
+        - "~/scripts"
+        - "~/.backup"
 
     - name: copy scripts
       ansible.builtin.template:
