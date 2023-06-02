@@ -32,3 +32,5 @@
     - role: synology
       become: yes
       become_user: "{{ user }}"
+      vars:
+        synology_user: "{{ user }}"

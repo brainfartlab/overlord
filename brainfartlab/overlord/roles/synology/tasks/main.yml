@@ -17,32 +17,6 @@
     backup: yes
   when: not_container
 
-- name: copy scripts
-  block:
-    - name: ensure scripts directory exists
-      ansible.builtin.file:
-        path: "~/scripts"
-        state: directory
-        mode: '0755'
-
-    - name: copy scripts
-      ansible.builtin.copy:
-        src: "{{ item }}"
-        dest: "~/scripts/{{ item }}"
-        mode: '0755'
-      loop:
-        - sync-down.sh
-        - sync-up.sh
-
-    - name: copy config files
-      ansible.builtin.copy:
-        src: "{{ item }}"
-        dest: "~/scripts/{{ item }}"
-        mode: '0644'
-      loop:
-        - filters.txt
-
-
 - name: generate and fetch an openssh keypair
   block:
     - name: ensure ssh directory exists
@@ -62,6 +36,31 @@
       ansible.builtin.fetch:
         src: ~/.ssh/id_ed25519_synology.pub
         dest: "/tmp/id_ed25519_synology-{{ inventory_hostname }}.pub"
+
+- name: copy scripts
+  block:
+    - name: ensure scripts directory exists
+      ansible.builtin.file:
+        path: "~/scripts"
+        state: directory
+        mode: '0755'
+
+    - name: copy scripts
+      ansible.builtin.template:
+        src: "{{ item }}.j2"
+        dest: "~/scripts/{{ item }}"
+        mode: '0755'
+      loop:
+        - sync-down.sh
+        - sync-up.sh
+
+    - name: copy config files
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "~/scripts/{{ item }}"
+        mode: '0644'
+      loop:
+        - filters.txt
 
 - name: install synology systemd service
   block:
@@ -84,9 +83,19 @@
         enabled: true
       when: not_container
 
-- name: periodic backup using cron
-  ansible.builtin.cron:
-    job: "cd ~/scripts && ~/scripts/sync-up.sh"
-    name: backup
-    special_time: hourly
-    state: present
+- name: schedule hourly backup
+  block:
+    - name: periodic backup using cron
+      ansible.builtin.cron:
+        job: "cd ~/scripts && ~/scripts/sync-up.sh"
+        name: backup
+        special_time: hourly
+        state: present
+
+    - name: enable cron service
+      ansible.builtin.systemd:
+        name: crond
+        state: started
+        enabled: true
+      when: not_container
+
