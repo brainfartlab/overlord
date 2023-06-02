@@ -1,0 +1,92 @@
+---
+- name: install packages
+  become: yes
+  become_user: root
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ install_packages }}"
+
+- name: add synology to /etc/hosts
+  become: yes
+  become_user: root
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ synology_ip }} synology"
+    state: present
+    backup: yes
+  when: not_container
+
+- name: copy scripts
+  block:
+    - name: ensure scripts directory exists
+      ansible.builtin.file:
+        path: "~/scripts"
+        state: directory
+        mode: '0755'
+
+    - name: copy scripts
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "~/scripts/{{ item }}"
+        mode: '0755'
+      loop:
+        - sync-down.sh
+        - sync-up.sh
+
+    - name: copy config files
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "~/scripts/{{ item }}"
+        mode: '0644'
+      loop:
+        - filters.txt
+
+
+- name: generate and fetch an openssh keypair
+  block:
+    - name: ensure ssh directory exists
+      ansible.builtin.file:
+        path: "~/.ssh"
+        state: directory
+        mode: '0700'
+
+    - name: generate an openssh keypair
+      community.crypto.openssh_keypair:
+        path: "~/.ssh/id_ed25519_synology"
+        type: ed25519
+        regenerate: full_idempotence
+      register: ssh_keypair
+
+    - name: fetch the openssh public key
+      ansible.builtin.fetch:
+        src: ~/.ssh/id_ed25519_synology.pub
+        dest: "/tmp/id_ed25519_synology-{{ inventory_hostname }}.pub"
+
+- name: install synology systemd service
+  block:
+    - name: ensure local systemd directory exists
+      ansible.builtin.file:
+        path: "~/.config/systemd/user"
+        state: directory
+        mode: '0755'
+
+    - name: install service config
+      ansible.builtin.copy:
+        src: datasync.service
+        dest: "~/.config/systemd/user/datasync.service"
+        mode: '0644'
+
+    - name: enable service
+      ansible.builtin.systemd:
+        name: datasync
+        state: started
+        enabled: true
+      when: not_container
+
+- name: periodic backup using cron
+  ansible.builtin.cron:
+    job: "~/scripts/sync-up.sh"
+    name: backup
+    special_time: hourly
+    state: present
