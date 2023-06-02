@@ -86,7 +86,7 @@
 
 - name: periodic backup using cron
   ansible.builtin.cron:
-    job: "~/scripts/sync-up.sh"
+    job: "cd ~/scripts && ~/scripts/sync-up.sh"
     name: backup
     special_time: hourly
     state: present
