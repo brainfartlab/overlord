@@ -1,0 +1,13 @@
+[Unit]
+Description=Backup files
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+StandardOutput=journal
+WorkingDirectory=%h/scripts
+ExecStart=%h/scripts/sync-down.sh
+
+[Install]
+WantedBy=default.target
