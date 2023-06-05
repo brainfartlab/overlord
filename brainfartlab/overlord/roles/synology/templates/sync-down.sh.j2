@@ -1,8 +1,0 @@
-#!/bin/bash
-sleep 2
-
-timestamp=$(date +"%Y%m%d%H%M%S")
-
-rsync -aivz \
-  -e "ssh -i {{ ssh_keypair.filename }}" \
-  {{ synology_user }}@synology:/volume1/backup/{{ synology_user }}/ ~/Documents > $HOME/.backup/down-$timestamp.log

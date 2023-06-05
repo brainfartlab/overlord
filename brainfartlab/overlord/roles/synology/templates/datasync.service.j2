@@ -6,8 +6,9 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 StandardOutput=journal
-WorkingDirectory=%h/scripts
-ExecStart=%h/scripts/sync-down.sh
+ExecStart=sync-down.sh $SYNOLOGY_USER $SYNOLOGY_KEY
+Environment="SYNOLOGY_USER={{ synology_user }}"
+Environment="SYNOLOGY_KEY={{ ssh_keypair.filename }}"
 
 [Install]
 WantedBy=default.target

@@ -1,7 +1,0 @@
-#!/bin/bash
-timestamp=$(date +"%Y%m%d%H%M%S")
-
-rsync -aivz \
-  --exclude-from filters.txt \
-  -e "ssh -i {{ ssh_keypair.filename }}" \
-  ~/Documents/ {{ synology_user }}@synology:/volume1/backup/{{ synology_user }} > $HOME/.backup/up-$timestamp.log

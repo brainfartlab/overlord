@@ -17,6 +17,7 @@ The following variables will change the behavior of this role (default values ar
 ```yaml
 # defaults
 synology_ip: "192.168.1.1"
+synology_user: myuser
 
 # vars
 install_packages:
@@ -34,6 +35,7 @@ Including an example of how to use your role (for instance, with variables passe
         - role: brainfartlab.overlord.synology
           vars:
             synology_ip: "192.168.1.1"
+            synology_user: myuser
 
 License
 -------

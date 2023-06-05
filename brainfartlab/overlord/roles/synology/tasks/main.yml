@@ -39,31 +39,43 @@
 
 - name: copy scripts
   block:
-    - name: ensure scripts directory exists
+    - name: ensure backup directory exists
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         mode: '0755'
       loop:
-        - "~/scripts"
         - "~/.backup"
 
     - name: copy scripts
-      ansible.builtin.template:
-        src: "{{ item }}.j2"
-        dest: "~/scripts/{{ item }}"
+      become: yes
+      become_user: root
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "/usr/local/bin/{{ item }}"
         mode: '0755'
       loop:
         - sync-down.sh
         - sync-up.sh
 
-    - name: copy config files
-      ansible.builtin.copy:
-        src: "{{ item }}"
-        dest: "~/scripts/{{ item }}"
-        mode: '0644'
+    - name: ensure brainfartlab share directory exists
+      become: yes
+      become_user: root
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
       loop:
-        - filters.txt
+        - "/usr/local/share/brainfartlab/synology"
+
+    - name: copy config files
+      become: yes
+      become_user: root
+      ansible.builtin.copy:
+        src: "filters.txt"
+        dest: "/usr/local/share/brainfartlab/synology/filters.txt"
+        mode: '0644'
+      register: rsync_filters
 
 - name: install synology systemd service
   block:
@@ -74,8 +86,8 @@
         mode: '0755'
 
     - name: install service config
-      ansible.builtin.copy:
-        src: datasync.service
+      ansible.builtin.template:
+        src: datasync.service.j2
         dest: "~/.config/systemd/user/datasync.service"
         mode: '0644'
 
@@ -90,7 +102,7 @@
   block:
     - name: periodic backup using cron
       ansible.builtin.cron:
-        job: "cd ~/scripts && ~/scripts/sync-up.sh"
+        job: "sync-up.sh {{ ssh_keypair.filename }} {{ synology_user }}}"
         name: backup
         special_time: hourly
         state: present
@@ -101,4 +113,3 @@
         state: started
         enabled: true
       when: not_container
-
