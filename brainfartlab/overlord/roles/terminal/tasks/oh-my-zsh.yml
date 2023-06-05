@@ -3,3 +3,9 @@
   ansible.builtin.shell: "curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash"
   args:
     creates: "~/.oh-my-zsh"
+
+- name: enable plugins
+  ansible.builtin.lineinfile:
+    regexp: "^plugins="
+    line: "plugins=(git vi-mode tmux ripgrep aws copyfile copypath rust poetry)"
+    path: "~/.zshrc"
