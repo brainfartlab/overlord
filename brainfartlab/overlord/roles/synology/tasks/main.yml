@@ -36,6 +36,7 @@
       ansible.builtin.fetch:
         src: ~/.ssh/id_ed25519_synology.pub
         dest: "/tmp/id_ed25519_synology-{{ inventory_hostname }}.pub"
+        flat: true
 
 - name: copy scripts
   block:
@@ -95,6 +96,7 @@
       ansible.builtin.systemd:
         name: datasync
         state: started
+        scope: user
         enabled: true
       when: not_container
 
