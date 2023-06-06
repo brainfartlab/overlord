@@ -2,6 +2,7 @@
 install_packages:
   - bzip2
   - bzip2-devel
+  - cronie
   - git
   - gnupg2
   - man
