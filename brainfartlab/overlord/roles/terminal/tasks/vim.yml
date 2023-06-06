@@ -54,3 +54,11 @@
     marker: '# {mark} ANSIBLE MANAGED BLOCK - fzf'
     block: "{{ fzf_default | string }}"
     create: yes
+
+- name: make vim default editor
+  ansible.builtin.lineinfile:
+    path: ~/.zshrc
+    insertafter: EOF
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - editor'
+    block: "export EDITOR=vim"
+    create: yes
