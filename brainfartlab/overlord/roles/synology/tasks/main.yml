@@ -98,7 +98,7 @@
   block:
     - name: periodic backup using cron
       ansible.builtin.cron:
-        job: "sync-up.sh {{ ssh_keypair.filename }} {{ synology_user }}}"
+        job: "sync-up.sh {{ ssh_keypair.filename }} {{ synology_user }}"
         name: backup
         special_time: hourly
         state: present
