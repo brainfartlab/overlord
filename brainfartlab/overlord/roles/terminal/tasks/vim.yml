@@ -59,6 +59,6 @@
   ansible.builtin.lineinfile:
     path: ~/.zshrc
     insertafter: EOF
-    marker: '# {mark} ANSIBLE MANAGED BLOCK - editor'
+    regexp: "^export EDITOR="
     line: "export EDITOR=vim"
     create: yes
