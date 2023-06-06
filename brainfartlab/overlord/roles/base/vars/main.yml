@@ -10,6 +10,7 @@ install_packages:
   - openssl-devel
   - pass
   - pinentry-tty
+  - rsyslog
   - systemd-udev
   - xclip
   - xz
