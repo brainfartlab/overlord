@@ -60,5 +60,5 @@
     path: ~/.zshrc
     insertafter: EOF
     marker: '# {mark} ANSIBLE MANAGED BLOCK - editor'
-    block: "export EDITOR=vim"
+    line: "export EDITOR=vim"
     create: yes
