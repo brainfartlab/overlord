@@ -5,6 +5,7 @@
 - .*/
 - __pycache__/
 - cdk.out/
+- elm-stuff/
 - node_modules/
 - site-packages/
 - target/
