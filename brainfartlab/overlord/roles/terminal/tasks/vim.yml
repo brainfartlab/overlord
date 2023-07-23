@@ -24,18 +24,23 @@
 
 - name: vim nord color scheme
   block:
+    - name: set desktop environment dependent variables
+      ansible.builtin.include_vars: "vars/nord_{{ desktop_environment }}.yml"
+
     - name: clone nord color scheme
       ansible.builtin.git:
-        repo: "https://github.com/nordtheme/gnome-terminal"
+        repo: "{{ nord_repo }}"
         version: master
-        dest: ~/nord-gnome-terminal
+        dest: ~/nord-terminal
 
     - name: install nord color theme
-      ansible.builtin.shell: ~/nord-gnome-terminal/src/sh/nord.sh
+      ansible.builtin.shell: "~/nord-terminal/{{ nord_script }}"
+      args:
+        chdir: ~/nord-terminal
 
     - name: remove nord color theme installer
       ansible.builtin.file:
-        path: ~/nord-gnome-terminal
+        path: ~/nord-terminal
         state: absent
 
   when: not nord_theme_presence.stat.exists

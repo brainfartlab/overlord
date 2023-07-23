@@ -1,0 +1,2 @@
+nord_repo: "https://github.com/nordtheme/gnome-terminal"
+nord_script: "src/sh/nord.sh"
