@@ -92,7 +92,7 @@
         state: started
         scope: user
         enabled: true
-      when: false
+      when: not_container
 
 - name: schedule hourly backup
   block:
