@@ -45,7 +45,7 @@ jobs:
         run: pip3 install yamllint ansible-lint ansible-compat==3.0.2 ansible molecule "molecule-plugins[podman]"
 
       - name: Install Galaxy dependencies.
-        run: ansible-galaxy collection install containers.podman
+        run: ansible-galaxy collection install containers.podman --force
 
       - name: Run molecule
         working-directory: brainfartlab/overlord/roles/${{ matrix.value }}
